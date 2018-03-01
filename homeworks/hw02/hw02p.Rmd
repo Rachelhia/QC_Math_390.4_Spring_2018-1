@@ -5,6 +5,10 @@ date: "March 6, 2018"
 output: pdf_document
 ---
 
+```{r setup, cache = F}
+knitr::opts_chunk$set(error = TRUE) #this allows errors to be printed into the PDF
+```
+
 Welcome to HW02p where the "p" stands for "practice" meaning you will use R to solve practical problems. This homework is due 11:59 PM Tuesday 3/6/18. 
 
 You should have RStudio installed to edit this file. You will write code in places marked "TO-DO" to complete the problems. Some of this will be a pure programming assignment. Sometimes you will have to also write English.
@@ -77,7 +81,7 @@ TO-DO
 
 
 
-2. Use the `e1071` package to fit an SVM model to `y_binary` using the predictors found in `X_simple_feature_matrix`. Do not specify
+2. Use the `e1071` package to fit an SVM model to `y_binary` using the predictors found in `X_simple_feature_matrix`. Do not specify the $\lambda$ (i.e. do not specify the `cost` argument).
 
 ```{r}
 svm_model = #TO-DO
@@ -106,15 +110,15 @@ TO-DO
 Note there are differences between this spec and the perceptron learning algorithm spec in question \#1. You should figure out a way to respect the `MAX_ITER` argument value. 
 
 ```{r}
-#' This function implements the hinge-loss linear support vector machine algorithm of Vladimir Vapnik (1963).
+#' This function implements the hinge-loss + maximum margin linear support vector machine algorithm of Vladimir Vapnik (1963).
 #'
 #' @param Xinput      The training data features as an n x p matrix.
 #' @param y_binary    The training data responses as a vector of length n consisting of only 0's and 1's.
 #' @param MAX_ITER    The maximum number of iterations the algorithm performs. Defaults to 5000.
 #' @param lambda      A scalar hyperparameter trading off margin of the hyperplane versus average hinge loss.
-#'                    The default value is 1.
+#'                    The default value is 0.1 to mimic hard margin in the linearly separable case.
 #' @return            The computed final parameter (weight) as a vector of length p + 1
-linear_svm_learning_algorithm = function(Xinput, y_binary, MAX_ITER = 5000, lambda = 1){
+linear_svm_learning_algorithm = function(Xinput, y_binary, MAX_ITER = 5000, lambda = 0.1){
   #TO-DO
 }
 ```
@@ -165,7 +169,7 @@ For extra credit, in addition to the argument `k`, add an argument `d` represent
 ```
 
 
-4. We move on to simple linear modeling using the ordinary least squares algorithm.
+5. We move on to simple linear modeling using the ordinary least squares algorithm.
 
 Let's quickly recreate the sample data set from practice lecture 7:
 
@@ -188,11 +192,11 @@ Verify your computations are correct using the `lm` function in R:
 ```{r}
 lm_mod = #TO-DO
 b_vec = coef(lm_mod)
-expect_equal(b_0, b_vec[1], tol = 1e-4)
-expect_equal(b_1, b_vec[2], tol = 1e-4)
+expect_equal(b_0, as.numeric(b_vec[1]), tol = 1e-4) #thanks to Rachel for spotting this bug - the b_vec must be casted to numeric
+expect_equal(b_1, as.numeric(b_vec[2]), tol = 1e-4)
 ```
 
-5. We are now going to repeat one of the first linear model building exercises in history --- that of Sir Francis Galton in 1886. First load up package `HistData`.
+6. We are now going to repeat one of the first linear model building exercises in history --- that of Sir Francis Galton in 1886. First load up package `HistData`.
 
 ```{r}
 #TO-DO
